@@ -2,25 +2,17 @@ from fastapi import Depends, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
-from pydantic import BaseModel
 from typing import Optional
 import db_models
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from db import engine, get_db
 from exceptions import token_exception, get_user_exception
+from pydantic_models import CreateUser
 
 
 SECRET_KEY = "KlgH6AzYDeZeGwD288to7942vTHT8wp7"
 ALGORITHM = "HS256"
-
-
-class CreateUser(BaseModel):
-    username: str
-    email: Optional[str]
-    first_name: str
-    last_name: str
-    password: str
 
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -30,7 +22,11 @@ db_models.Base.metadata.create_all(bind=engine)
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="token")
 
 
-router = APIRouter()
+auth_router = APIRouter(
+    prefix="/auth",
+    tags=["auth"],
+    responses={401: {"user": "Not authorized"}}
+)
 
 
 def get_password_hash(password):
@@ -75,7 +71,7 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
         raise get_user_exception()
 
 
-@router.post('/create_user')
+@auth_router.post('/create_user')
 async def create_user(user: CreateUser, db: Session = Depends(get_db)):
     create_user_model = db_models.Users()
     create_user_model.username = user.username
@@ -84,12 +80,13 @@ async def create_user(user: CreateUser, db: Session = Depends(get_db)):
     create_user_model.last_name = user.last_name
     create_user_model.hashed_password = get_password_hash(user.password)
     create_user_model.is_active = True
+    create_user_model.phone_number = user.phone_number
 
     db.add(create_user_model)
     db.commit()
 
 
-@router.post('/token')
+@auth_router.post('/token')
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
