@@ -1,7 +1,7 @@
 """create phone number for user col
 
 Revision ID: 1944ef5f8de8
-Revises: 
+Revises:
 Create Date: 2023-01-13 14:21:33.417343
 
 """

@@ -26,7 +26,7 @@ class Todo(BaseModel):
     completed: bool = False
 
 
-class Address_pydantic(BaseModel):
+class AddressPydantic(BaseModel):
     address1: str
     address2: Optional[str]
     city: str

@@ -49,8 +49,8 @@ async def user_password_change(
             verify_password(
                 user_verification.password, user_model.hashed_password):
             user_model.hashed_password = get_password_hash(
-                    user_verification.new_password
-                )
+                user_verification.new_password
+            )
             db.add(user_model)
             db.commit()
             return "seccussful"

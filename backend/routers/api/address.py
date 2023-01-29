@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from db_dir.db import get_db
 from db_dir.db_models import Address, Users
-from db_dir.pydantic_models import Address_pydantic
+from db_dir.pydantic_models import AddressPydantic
 
 from ..api.auth_api import get_current_user, get_user_exception
 
@@ -16,7 +16,7 @@ address_router = APIRouter(
 
 @address_router.post("/")
 async def create_address(
-    address: Address_pydantic,
+    address: AddressPydantic,
     user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

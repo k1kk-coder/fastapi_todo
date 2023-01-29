@@ -68,7 +68,7 @@ async def create_todo(
     return {
         "status": 201,
         'message': 'Todo created successfully'
-        }
+    }
 
 
 @todos_router.put("/{todo_id}")
@@ -95,7 +95,7 @@ async def update_todo(
         return {
             "status": 200,
             'message': 'Todo updated successfully'
-            }
+        }
     raise raise_item_not_found()
 
 
@@ -118,5 +118,5 @@ async def delete_todo(
         return {
             "status": 201,
             'message': 'Todo deleted successfully'
-            }
+        }
     raise raise_item_not_found()
