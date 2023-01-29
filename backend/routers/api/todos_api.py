@@ -1,11 +1,12 @@
-from fastapi import Depends, APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from db import engine, get_db
-from db_models import Base, Todos
-from pydantic_models import Todo
-from exceptions import raise_item_not_found
-from .auth import get_current_user, get_user_exception
 
+from db_dir.db import engine, get_db
+from db_dir.db_models import Base, Todos
+from db_dir.pydantic_models import Todo
+from exceptions import raise_item_not_found
+
+from ..api.auth_api import get_current_user, get_user_exception
 
 todos_router = APIRouter(
     prefix="/todos",

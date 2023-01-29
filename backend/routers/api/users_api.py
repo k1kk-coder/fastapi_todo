@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from db import engine, get_db
-from db_models import Base, Users
-from pydantic_models import UserVerification
-from exceptions import raise_item_not_found
-from .auth import get_current_user, get_user_exception, verify_password
-from .auth import get_password_hash
+
+from db_dir.db import engine, get_db
+from db_dir.db_models import Base, Users
+from db_dir.pydantic_models import UserVerification
+from exceptions import get_user_exception, raise_item_not_found
+
+from ..api.auth_api import get_current_user, get_password_hash, verify_password
 
 users_router = APIRouter(
     prefix="/users",
@@ -23,17 +24,6 @@ async def get_all_users(db: Session = Depends(get_db)):
 
 @users_router.get("/user/{user_id}")
 async def get_user_by_path(
-    user_id: int,
-    db: Session = Depends(get_db)
-):
-    user_model = db.query(Users).filter(Users.id == user_id).first()
-    if user_model is not None:
-        return user_model
-    raise raise_item_not_found()
-
-
-@users_router.get("/user/")
-async def get_user_by_query(
     user_id: int,
     db: Session = Depends(get_db)
 ):

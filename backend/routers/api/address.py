@@ -1,10 +1,11 @@
-from fastapi import Depends, APIRouter
-from db_models import Address, Users
-from db import get_db
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from pydantic_models import Address_pydantic
-from .auth import get_current_user, get_user_exception
 
+from db_dir.db import get_db
+from db_dir.db_models import Address, Users
+from db_dir.pydantic_models import Address_pydantic
+
+from ..api.auth_api import get_current_user, get_user_exception
 
 address_router = APIRouter(
     prefix="/address",

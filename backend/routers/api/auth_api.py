@@ -1,23 +1,25 @@
-from fastapi import Depends, APIRouter
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+import os
 from datetime import datetime, timedelta
-from jose import jwt, JWTError
 from typing import Optional
-import db_models
+
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from db import engine, get_db
-from exceptions import token_exception, get_user_exception
-from pydantic_models import CreateUser
 
+from db_dir.db import engine, get_db
+from db_dir.db_models import Base, Users
+from db_dir.pydantic_models import CreateUser
+from exceptions import get_user_exception, token_exception
 
-SECRET_KEY = "KlgH6AzYDeZeGwD288to7942vTHT8wp7"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-db_models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -38,8 +40,8 @@ def verify_password(plain_password, hashed_password):
 
 
 def authenticate_user(username: str, password: str, db: Session):
-    user = db.query(db_models.Users)\
-        .filter(db_models.Users.username == username).first()
+    user = db.query(Users)\
+        .filter(Users.username == username).first()
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -73,7 +75,7 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
 
 @auth_router.post('/create_user')
 async def create_user(user: CreateUser, db: Session = Depends(get_db)):
-    create_user_model = db_models.Users()
+    create_user_model = Users()
     create_user_model.username = user.username
     create_user_model.email = user.email
     create_user_model.first_name = user.first_name
