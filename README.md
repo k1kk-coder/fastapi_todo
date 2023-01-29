@@ -1,3 +1,5 @@
+[![Todo Workflow](https://github.com/k1kk-coder/fastapi_todo/actions/workflows/todo_workflow.yml/badge.svg)](https://github.com/k1kk-coder/fastapi_todo/actions/workflows/todo_workflow.yml)
+
 # FastAPI ToDo
 A handy tool for creating and tracking your todos
 with the ability to edit and mark completed.
