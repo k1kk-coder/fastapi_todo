@@ -16,7 +16,6 @@ mccabe==0.7.0
 passlib==1.7.4
 psycopg2-binary==2.9.5
 pyasn1==0.4.8
-pycodestyle==2.10.0
 pycparser==2.21
 pydantic==1.10.2
 pyflakes==3.0.1
